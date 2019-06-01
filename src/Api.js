@@ -5,7 +5,8 @@ const api = axios.create({
 })
 
 const Apis = {
-    loadCategorias: () => api.get('http://localhost:3000/categorias'),
-    deleteCategoria: (id) => api.delete('http://localhost:3000/categorias/'+id)
+    loadCategorias: () => api.get('categorias'),
+    deleteCategoria: (id) => api.delete('categorias/'+id),
+    createCategoria : (categoria) => api.post('categorias', categoria)
 }
 export default Apis

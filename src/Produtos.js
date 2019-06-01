@@ -2,66 +2,36 @@ import React, { Component } from 'react'
 import { Route, Link } from 'react-router-dom'
 import ProdutosHome from './ProdutosHome'
 import Categoria from './Categoria'
-import axios from 'axios'
 
-import Api from './Api'
 
 class Produtos extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            categorias: []
-        }
-    }
-
-    loadCategorias = () => {
-        Api.loadCategorias().then(res => {
-                this.setState({
-                    categorias: res.data
-                })
-            })
-    }
 
     componentDidMount() {
-        this.loadCategorias()
+        this.props.loadCategorias()
     }
-
-    removeCategoria = (categoria) => {
-            Api.deleteCategoria(categoria.id).then((res)=> this.loadCategorias())
-    }
-
     renderCategoria = (cat) => {
         return (
             <li key={cat.id}>
                 <Link to={`/produtos/categoria/${cat.id}`} >
                 <button 
-                    onClick={() => this.removeCategoria(cat)}
+                    onClick={() => this.props.removeCategoria(cat)}
                     className='btn btn-danger btn-sm'> x
                 </button> {cat.categoria}</Link>
-
             </li>
-
         )
     }
 
     handleNewCategoria = (key) => {
         if (key.keyCode === 13) {
-            axios
-                .post('http://localhost:3000/categorias',
-                    {
-                        categoria: this.refs.categoria.value
-                    }
-                )
-                .then(res => {
-                    this.refs.categoria.value = ''
-                    this.loadCategorias()
-                })
+           this.props.createCategoria({
+               categoria: this.refs.categoria.value
+           })
+           this.refs.categoria.value = ''
         }
     }
 
     render() {
-        const { match } = this.props
-        const { categorias } = this.state
+        const { match, categorias } = this.props
         return (
             <div className='row'>
                 <div className='col-md-2'>
